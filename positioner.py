@@ -83,10 +83,7 @@ ax.axes.set_zlim3d(bottom=-lim, top=lim)
 
 
 
-g_vec = []
-
-
-
+g_vec = np.array([[0],[0],[0]])
 
 # Now try to roatate g vector and find component in x, y, and z directions
 phi = np.deg2rad(-45)
@@ -111,12 +108,21 @@ for phi in range(0,360,deg):
     y_axis_new = np.matmul(x_rotation,y_axis)
     z_axis_new = np.matmul(x_rotation,z_axis)
     g_axis = np.array([[1],[0.5],[2]]).transpose()
-    g_vec.append([np.dot(g_axis,x_axis_new),
-    np.dot(g_axis,y_axis_new),
-    np.dot(g_axis,z_axis_new)])
-    #g_vec.append([x_axis_new[2],y_axis_new[2],z_axis_new[2]])
-    ax.scatter3D(g_vec[-1][0], g_vec[-1][1], g_vec[-1][2], c="orange")
+    g_vec_new = np.array([np.dot(g_axis,x_axis_new)[0],
+    np.dot(g_axis,y_axis_new)[0],
+    np.dot(g_axis,z_axis_new)[0]])
+    g_vec = np.concatenate((g_vec,g_vec_new),axis = 1)
+    print(g_vec)
+    ax.scatter3D(g_vec[:,-1][0], g_vec[:,-1][1], g_vec[:,-1][2], c="orange")
 
-    print("g_vec:", g_vec[-1][0][0],g_vec[-1][1][0],g_vec[-1][2][0])
+print("\nFINISHED GVEC:\n",g_vec)
+svd = np.linalg.svd(g_vec - np.mean(g_vec, axis=1, keepdims=True))
+left = svd[0]
+line = left[:, -1]
+print("Normal:",line)
+ax.plot3D([0,line[0]],[0,line[1]],[0,line[2]],c="red")
+print(left[:, -1] @ g_vec)
+
+
 plt.show()
 
