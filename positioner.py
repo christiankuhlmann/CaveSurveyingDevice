@@ -86,7 +86,7 @@ ax.axes.set_zlim3d(bottom=-lim, top=lim)
 g_vec = np.array([[0],[0],[0]])
 
 # Now try to roatate g vector and find component in x, y, and z directions
-phi = np.deg2rad(-45)
+phi = np.deg2rad(-10)
 y_45_deg = np.array([
             [np.cos(phi),0,np.sin(phi)],
             [0,1,0],
@@ -95,6 +95,7 @@ y_45_deg = np.array([
 x_axis = np.matmul(y_45_deg,np.array([[1],[0],[0]]))
 y_axis = np.matmul(y_45_deg,np.array([[0],[1],[0]]))
 z_axis = np.matmul(y_45_deg,np.array([[0],[0],[1]]))
+g_axis = np.array([[1],[-1],[1]]).transpose()
 
 for phi in range(0,360,deg):
     theta = np.deg2rad(phi)
@@ -107,7 +108,6 @@ for phi in range(0,360,deg):
     x_axis_new = np.matmul(x_rotation,x_axis)
     y_axis_new = np.matmul(x_rotation,y_axis)
     z_axis_new = np.matmul(x_rotation,z_axis)
-    g_axis = np.array([[1],[0.5],[2]]).transpose()
     g_vec_new = np.array([np.dot(g_axis,x_axis_new)[0],
     np.dot(g_axis,y_axis_new)[0],
     np.dot(g_axis,z_axis_new)[0]])
@@ -123,6 +123,11 @@ print("Normal:",line)
 ax.plot3D([0,line[0]],[0,line[1]],[0,line[2]],c="red")
 print(left[:, -1] @ g_vec)
 
+print(f"Initial vector: {g_axis}")
+if np.dot(g_vec[:,0],line) < 0 :
+     line = -line
+print("Normal:",line)
+    
 
 plt.show()
 

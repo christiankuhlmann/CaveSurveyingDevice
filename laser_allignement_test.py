@@ -6,7 +6,7 @@ central_point = np.mean(tilt_arr) # or fit a circle through the points?
 correction_dir = abs(tilt_arr-central_point)/(tilt_arr-central_point)
 print("Correction dir:", correction_dir)
 
-alpha = 2*np.mean(np.abs(tilt_arr-central_point))
+alpha = np.mean(np.abs(tilt_arr-central_point))
 beta = np.pi/2 - alpha/2
 gamma = np.pi-beta
 
@@ -17,7 +17,6 @@ l_2 = 2*l_0 * np.cos(alpha/2)
 eeta = np.arcsin((l_2/l_1) * np.sin(gamma))
 phi = np.pi - gamma - eeta
 theta = np.pi - phi - beta
-
 
 correction_vector = np.array([
                                 [np.sin(theta)*np.cos(phi)],
