@@ -90,4 +90,3 @@ ax.scatter(x_arr,y_arr,z_arr,s=2,color='green')
 
 plt.show() 
 
-

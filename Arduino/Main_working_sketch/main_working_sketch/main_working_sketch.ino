@@ -46,18 +46,18 @@ Matrix<double,3,1> calc_true_vec(Vector3d normal_vec, VectorXd laser_distances, 
   return true_vec;
 }
 
-Vector3cd calc_magnetometer_HSI(Matrix3Xd meas_mat){
+Matrix3cd calc_magnetometer_HSI(Matrix3Xd meas_mat){
   MatrixXd centered = meas_mat.colwise() - meas_mat.rowwise().mean();
   Matrix3d cov = (centered.transpose() * centered) / double(meas_mat.cols() - 1);
   Eigen::EigenSolver<Matrix3d> eig;
   eig.compute(cov);
   cout << eig.eigenvalues() << "\n";
   Eigen::Vector3cd vec = eig.eigenvalues();
-  Eigen::Vector3cd eigenvalues_pow2 = vec.array().pow(0.5);
-  DiagonalMatrix<std::complex<double>, 3> diag_sq_eig(eigenvalues_pow2);
-  Matrix3cd T = eig.eigenvectors() * diag_sq_eig;
+  Eigen::Vector3cd eigenvalues_sqrt = vec.array().pow(0.5);
+  DiagonalMatrix<std::complex<double>, 3> diag_sqrt_eig(eigenvalues_sqrt);
+  Matrix3cd T = eig.eigenvectors() * diag_sqrt_eig;
   Matrix3cd inv_T = T.inverse();
-  return inv_t;
+  return inv_T;
 }
 
 
