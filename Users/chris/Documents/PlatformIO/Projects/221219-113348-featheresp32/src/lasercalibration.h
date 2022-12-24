@@ -5,6 +5,8 @@
 #include <ArduinoEigenDense.h>
 #include <ArduinoEigenSparse.h>
 #include <iostream>
+#include "config.h"
+
 
 using namespace Eigen;
 using std::cout;
@@ -13,6 +15,6 @@ using std::cout;
 Vector3d calc_SVD(MatrixXd g_vec, bool debug = false);
 
 // Calculates the actual vector of the ToF sensor, given a normal vector, set of measured distances, and length of disto from fornt to back.
-Matrix<double,3,1> calc_true_vec(Vector3d normal_vec, VectorXd laser_distances, double disto_len, bool debug = false);
+Matrix<double,3,1> calc_true_vec(Vector3d normal_vec, VectorXd laser_distances, bool debug = false);
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <preferences.h>
 #include <nvs_flash.h>
+#include "config.h"
 
 static Preferences preferences;
 

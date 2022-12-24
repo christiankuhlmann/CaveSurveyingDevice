@@ -15,6 +15,7 @@
 #include "lasercalibration.h"
 #include "magnetometer.h"
 #include "OLED.h"
+#include "config.h"
 
 // Defining global variables
 static Adafruit_SSD1306 display;
@@ -23,6 +24,9 @@ static float orientation_arr[3];
 
 static struct bno055_t myBNO;
 static struct bno055_gravity myGravityData;
+static struct bno055_mag myMagData;
+
+static Magnetometer magnetometer(&myMagData);
 
 void test_lasercalibration(){
   char buffer[150];
@@ -65,20 +69,6 @@ void init_bno(){
   delay(1);
 }
 
-void get_bno(){
-    bno055_read_gravity_xyz(&myGravityData);
-
-    Serial.print("X: ");             //To read out the Heading (Yaw)
-    Serial.println(float(myGravityData.x));       //Convert to degrees
- 
-    Serial.print("Y: ");                 //To read out the Roll
-    Serial.println(float(myGravityData.y));       //Convert to degrees
- 
-    Serial.print("Z: ");                //To read out the Pitch
-    Serial.println(float(myGravityData.z));       //Convert to degrees
-    Serial.println("");
-}
-
 void setup(){
   test_lasercalibration();
   Serial.println("Done!");
@@ -86,16 +76,56 @@ void setup(){
   init_bno();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
+  magnetometer.init();
 }
 
 void loop(){
   char buffer[100];
-  get_bno();
-  sprintf(buffer, "Orientation: %f %f %f\n",float(myGravityData.x),float(myGravityData.y),float(myGravityData.y));
-  Serial.printf(buffer);
+  // get_bno();
   display.clearDisplay();
+
+  // Magnetometer update code
+  magnetometer.update();
+  magnetometer.add_calibration_data();
+  Vector3d mag_data = magnetometer.get_heading();
+
+  // Accelerometer update code
+
+
+  Serial.print("Progress: ");
+  Serial.println(magnetometer.check_calibration_progress());
+
+
+  Serial.print("X: ");
+  Serial.println(float(mag_data(0)));
+
+  Serial.print("Y: ");
+  Serial.println(float(mag_data(1)));
+
+  Serial.print("Z: ");
+  Serial.println(float(mag_data(2)));
+  Serial.println("");
+
+
+
+  display.print("Progress: ");
+  display.println(magnetometer.check_calibration_progress());
+
+
+  display.print("X: ");
+  display.println(float(mag_data(0)));
+
+  display.print("Y: ");
+  display.println(float(mag_data(1)));
+
+  display.print("Z: ");
+  display.println(float(mag_data(2)));
+  display.println("");
+
+  
   display.setCursor(0,0);
   display.print(buffer);
   display.display();
-  delay(1);
+
+  delay(1000);
 }

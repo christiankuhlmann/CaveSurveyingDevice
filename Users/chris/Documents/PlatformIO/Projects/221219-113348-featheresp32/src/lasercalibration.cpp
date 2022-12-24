@@ -21,7 +21,7 @@ Vector3d calc_SVD(MatrixXd g_vec, bool debug /*= false*/){
   return normal;
 };
 
-Matrix<double,3,1> calc_true_vec(Vector3d normal_vec, VectorXd laser_distances, double disto_len, bool debug /*= false*/){
+Matrix<double,3,1> calc_true_vec(Vector3d normal_vec, VectorXd laser_distances, bool DEBUG /*= false*/){
   Matrix<double,3,1> x_axis;
   Vector3d true_vec;
   char buffer[150];
@@ -38,14 +38,14 @@ Matrix<double,3,1> calc_true_vec(Vector3d normal_vec, VectorXd laser_distances, 
     normal_vec = -normal_vec;
   };
   
-  l_0 = disto_len;
+  l_0 = DISTO_LEN;
   l_1 = laser_len;
   l_2 = l_0 * sin(alpha);
   l_3 = l_0 * cos(alpha) + sqrt(pow(l_1,2)-pow(l_2,2));
 
   true_vec = l_3 * x_axis + l_0 * normal_vec;
 
-  if (debug){
+  if (DEBUG){
     sprintf(buffer, "Alpha: %f \nNormal vector: %f %f %f\n", alpha, normal_vec[0], normal_vec[1], normal_vec[2]);
     Serial.printf(buffer);
     sprintf(buffer, "L0: %f \nL1: %f \nL2: %f \nL3: %f\n",l_0,l_1,l_2,l_3);
